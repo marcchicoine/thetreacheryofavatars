@@ -11,21 +11,11 @@ PoseNet example using p5.js
 let video;
 let poseNet;
 let poses = [];
-let pose;
-let nose;
-let img;
-let noseX;
-let noseY;
-let earLX;
-let earLY;
-let earRY;
-let earRX;
-let d;
+
 function setup() {
   createCanvas(400, 300);
   video = createCapture(VIDEO);
   video.size(width, height);
-img = loadImage('hatapple.png');
 
   // Create a new poseNet method with a single detection
   poseNet = ml5.poseNet(video, modelReady);
@@ -33,31 +23,6 @@ img = loadImage('hatapple.png');
   // with an array every time new poses are detected
   poseNet.on('pose', function(results) {
     poses = results;
-    nose = results[0].pose.nose;
-    rightEarP = results[0].pose.rightEar;
-    leftEarP = results[0].pose.leftEar;
-    rightWristP = results[0].pose.rightWrist;
-    leftWristP = results[0].pose.leftWrist;
-    rightElbowP = results[0].pose.rightElbow;
-    leftElbowP = results[0].pose.leftElbow;
-    leftShoulderP = results[0].pose.leftShoulder;
-    rightShoulderP = results[0].pose.rightShoulder;
-   noseX = results[0].pose.nose.x;
-  noseY = results[0].pose.nose.y;
-    earLX= results[0].pose.leftEar.x;
-    earLY= results[0].pose.leftEar.y;
-
-    earRX = results[0].pose.rightEar.x;
-    earRY = results[0].pose.rightEar.y;
-
-    rightHipP = results[0].pose.rightHip;
-    leftHipP = results[0].pose.leftHip;
-
-    rightKneeP = results[0].pose.rightKnee;
-    leftKneeP = results[0].pose.leftKnee;
-    rightAnkleP = results[0].pose.rightAnkle;
-    leftAnkleP = results[0].pose.leftAnkle;
-    // console.log(results);
   });
   // Hide the video element, and just show the canvas
   video.hide();
@@ -71,10 +36,8 @@ function draw() {
   image(video, 0, 0, width, height);
 
   // We can call both functions to draw all keypoints and the skeletons
-  // drawKeypoints();
+  drawKeypoints();
   drawSkeleton();
-  hatter();
-
 }
 
 // A function to draw ellipses over the detected keypoints
@@ -88,17 +51,12 @@ function drawKeypoints()  {
       let keypoint = pose.keypoints[j];
       // Only draw an ellipse is the pose probability is bigger than 0.2
       if (keypoint.score > 0.2) {
-        fill('#73F28F');
+        fill(255, 0, 0);
         noStroke();
         ellipse(keypoint.position.x, keypoint.position.y, 10, 10);
-
-        // drawingContext.filter = 'blur(40px)';
-
       }
-
     }
   }
-
 }
 
 // A function to draw the skeletons
@@ -114,14 +72,4 @@ function drawSkeleton() {
       line(partA.position.x, partA.position.y, partB.position.x, partB.position.y);
     }
   }
-}
-
-
-hatter = function (){
-  let d = dist(earLX, earLY, earRX, earRY);
-
-  image(img, noseX - d , noseY - (1.5 * d), d*2, d*2);
-
-
-
 }
